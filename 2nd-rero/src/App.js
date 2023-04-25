@@ -1,36 +1,30 @@
 import React, { useState } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { addItem, toggleItemDone, deleteItem } from './store/actions/itemsActions';
 import './App.css';
 
 function App() {
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
-  const [items, setItems] = useState([]);
+
+  const items = useSelector((state) => state.items.items);
+  const dispatch = useDispatch();
 
   const handleTitleChange = (e) => setTitle(e.target.value);
   const handleContentChange = (e) => setContent(e.target.value);
 
   const handleAddItem = () => {
-    setItems([...items, { title, content, isDone: false }]);
+    dispatch(addItem({ title, content, isDone: false }));
     setTitle('');
     setContent('');
   };
 
   const handleItemDone = (index) => {
-    const updatedItems = [...items];
-    updatedItems[index].isDone = true;
-    setItems(updatedItems);
-  };
-
-  const handleItemUndone = (index) => {
-    const updatedItems = [...items];
-    updatedItems[index].isDone = false;
-    setItems(updatedItems);
+    dispatch(toggleItemDone(index));
   };
 
   const handleDeleteItem = (index) => {
-    const updatedItems = [...items];
-    updatedItems.splice(index, 1);
-    setItems(updatedItems);
+    dispatch(deleteItem(index));
   };
 
   const workingItems = items.filter((item) => !item.isDone);
@@ -54,7 +48,7 @@ function App() {
       <Done
         items={doneItems}
         handleDeleteItem={handleDeleteItem}
-        handleItemUndone={handleItemUndone}
+        handleItemUndone={handleItemDone} // Reuse handleItemDone for toggling
       />
     </div>
   );
