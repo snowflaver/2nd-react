@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { addItem, toggleItemDone, deleteItem } from './store/itemsDuck';
+import { addItem, toggleItemDone, deleteItem, toggleItemUndone } from './store/itemsDuck';
 import './App.css';
 
 function App() {
@@ -13,17 +13,25 @@ function App() {
   const handleTitleChange = (e) => setTitle(e.target.value);
   const handleContentChange = (e) => setContent(e.target.value);
 
-  const handleAddItem = () => {
+  const handleAddItem = () => { // 추가하기 버튼을 누를때
     dispatch(addItem({ title, content, isDone: false }));
     setTitle('');
     setContent('');
   };
 
-  const handleItemDone = (index) => {
+  const handleItemDone = (index) => { //완료버튼 누를때
     dispatch(toggleItemDone(index));
   };
 
-  const handleDeleteItem = (index) => {
+  const handleItemUndone = (index) => { //취소버튼 누를때
+    const doneItem = doneItems[index];
+    const originalIndex = items.findIndex(
+      (item) => item.title === doneItem.title && item.content === doneItem.content
+    );
+    dispatch(toggleItemDone(originalIndex));
+  };
+
+  const handleDeleteItem = (index) => { // 삭제버튼을 누를때
     dispatch(deleteItem(index));
   };
 
@@ -48,7 +56,7 @@ function App() {
       <Done
         items={doneItems}
         handleDeleteItem={handleDeleteItem}
-        handleItemUndone={handleItemDone} // Reuse handleItemDone for toggling
+        handleItemUndone={handleItemUndone}
       />
     </div>
   );
