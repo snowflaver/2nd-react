@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { addItem, toggleItemDone, deleteItem, toggleItemUndone } from './store/itemsDuck';
+import { addItem, toggleItemDone, deleteItem } from './store/itemsDuck';
 import './App.css';
 
 function App() {
