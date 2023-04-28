@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { addItem, toggleItemDone, deleteItem } from './store/itemsDuck';
-import { BrowserRouter as Router, Route, Switch, Link } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
 import { v4 as todo } from 'uuid';
 import './App.css';
 
@@ -9,7 +9,7 @@ function App() {
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
 
-  const items = useSelector((state) => state.items.items);
+  const items = useSelector((state) => state.items);
   const dispatch = useDispatch();
 
   const handleTitleChange = (e) => setTitle(e.target.value);
@@ -24,14 +24,11 @@ function App() {
   const handleItemDone = (id) => {
     dispatch(toggleItemDone(id));
   };
-  
-  const handleItemUndone = (id) => {
-    dispatch(toggleItemUndone(id));
-  };
-  
+
   const handleDeleteItem = (id) => {
     dispatch(deleteItem(id));
   };
+  ;
 
   const workingItems = items.filter((item) => !item.isDone);
   const doneItems = items.filter((item) => item.isDone);
@@ -40,29 +37,24 @@ function App() {
     <Router>
       <div className='listappand'>
         <Title />
-        <Switch>
-          <Route exact path='/'>
-            <Appand
-              title={title}
+        <Routes>
+          <Route path='/'
+            element={<Appand title={title}
               content={content}
               handleTitleChange={handleTitleChange}
               handleContentChange={handleContentChange}
-              handleAddItem={handleAddItem}
-            />
-            <Working
+              handleAddItem={handleAddItem} />} />
+          <Route path='/working'
+            element={<Working
               items={workingItems}
               handleDeleteItem={handleDeleteItem}
-              handleItemDone={handleItemDone}
-            />
-          </Route>
-          <Route path='/done'>
-            <Done
+              handleItemDone={handleItemDone} />} />
+          <Route path='/done'
+            element={<Done
               items={doneItems}
               handleDeleteItem={handleDeleteItem}
-              handleItemUndone={handleItemUndone}
-            />
-          </Route>
-        </Switch>
+              handleItemUndone={handleItemDone} />} />
+        </Routes>
         <nav>
           <ul>
             <li>
@@ -97,7 +89,7 @@ function Appand({ title, content, handleTitleChange, handleContentChange, handle
   );
 }
 
-function Done({ items, handleDeleteItem, handleItemUndone }) {
+function Done({ items, handleDeleteItem, handleItemDone }) {
   return (
     <div>
       <h3>Done..!</h3>
@@ -108,7 +100,7 @@ function Done({ items, handleDeleteItem, handleItemUndone }) {
             <p>{item.content}</p>
             <div className='버튼들'>
               <button id='삭제' onClick={() => handleDeleteItem(item.id)}>삭제하기</button>
-              <button id='취소' onClick={() => handleItemUndone(item.id)}>취소</button>
+              <button id='취소' onClick={() => handleItemDone(item.id)}>취소</button>
             </div>
           </li>
         ))}
