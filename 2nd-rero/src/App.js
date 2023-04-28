@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { addItem, toggleItemDone, deleteItem } from './store/itemsDuck';
+import { BrowserRouter as Router, Route, Switch, Link } from 'react-router-dom';
+import { v4 as todo } from 'uuid';
 import './App.css';
 
 function App() {
@@ -13,52 +15,66 @@ function App() {
   const handleTitleChange = (e) => setTitle(e.target.value);
   const handleContentChange = (e) => setContent(e.target.value);
 
-  const handleAddItem = () => { // 추가하기 버튼을 누를때
-    dispatch(addItem({ title, content, isDone: false }));
+  const handleAddItem = () => {
+    dispatch(addItem({ id: todo(), title, content, isDone: false }));
     setTitle('');
     setContent('');
   };
 
-  const handleItemDone = (index) => { //완료버튼 누를때
-    dispatch(toggleItemDone(index));
+  const handleItemDone = (id) => {
+    dispatch(toggleItemDone(id));
   };
-
-  const handleItemUndone = (index) => { //취소버튼 누를때
-    const doneItem = doneItems[index];
-    const originalIndex = items.findIndex(
-      (item) => item.title === doneItem.title && item.content === doneItem.content
-    );
-    dispatch(toggleItemDone(originalIndex));
+  
+  const handleItemUndone = (id) => {
+    dispatch(toggleItemUndone(id));
   };
-
-  const handleDeleteItem = (index) => { // 삭제버튼을 누를때
-    dispatch(deleteItem(index));
+  
+  const handleDeleteItem = (id) => {
+    dispatch(deleteItem(id));
   };
 
   const workingItems = items.filter((item) => !item.isDone);
   const doneItems = items.filter((item) => item.isDone);
 
   return (
-    <div className='listappand'>
-      <Title />
-      <Appand
-        title={title}
-        content={content}
-        handleTitleChange={handleTitleChange}
-        handleContentChange={handleContentChange}
-        handleAddItem={handleAddItem}
-      />
-      <Working
-        items={workingItems}
-        handleDeleteItem={handleDeleteItem}
-        handleItemDone={handleItemDone}
-      />
-      <Done
-        items={doneItems}
-        handleDeleteItem={handleDeleteItem}
-        handleItemUndone={handleItemUndone}
-      />
-    </div>
+    <Router>
+      <div className='listappand'>
+        <Title />
+        <Switch>
+          <Route exact path='/'>
+            <Appand
+              title={title}
+              content={content}
+              handleTitleChange={handleTitleChange}
+              handleContentChange={handleContentChange}
+              handleAddItem={handleAddItem}
+            />
+            <Working
+              items={workingItems}
+              handleDeleteItem={handleDeleteItem}
+              handleItemDone={handleItemDone}
+            />
+          </Route>
+          <Route path='/done'>
+            <Done
+              items={doneItems}
+              handleDeleteItem={handleDeleteItem}
+              handleItemUndone={handleItemUndone}
+            />
+          </Route>
+        </Switch>
+        <nav>
+          <ul>
+            <li>
+              <Link to='/'>Working</Link>
+            </li>
+            <li>
+              <Link to='/done'>Done</Link>
+            </li>
+          </ul>
+        </nav>
+      </div>
+    </Router>
   );
 }
 
@@ -86,13 +102,13 @@ function Done({ items, handleDeleteItem, handleItemUndone }) {
     <div>
       <h3>Done..!</h3>
       <ul className='donelist'>
-        {items.map((item, index) => (
-          <li key={index}>
+        {items.map((item) => (
+          <li key={item.id}>
             <h4>{item.title}</h4>
             <p>{item.content}</p>
             <div className='버튼들'>
-              <button id='삭제' onClick={() => handleDeleteItem(index)}>삭제하기</button>
-              <button id='취소' onClick={() => handleItemUndone(index)}>취소</button>
+              <button id='삭제' onClick={() => handleDeleteItem(item.id)}>삭제하기</button>
+              <button id='취소' onClick={() => handleItemUndone(item.id)}>취소</button>
             </div>
           </li>
         ))}
@@ -106,13 +122,13 @@ function Working({ items, handleDeleteItem, handleItemDone }) {
     <div>
       <h3>Working..</h3>
       <ul className='worklist'>
-        {items.map((item, index) => (
-          <li key={index}>
+        {items.map((item) => (
+          <li key={item.id}>
             <h4>{item.title}</h4>
             <p>{item.content}</p>
             <div className='버튼들'>
-              <button className='button' id='삭제' onClick={() => handleDeleteItem(index)}>삭제하기</button>
-              <button className='button' id='완료' onClick={() => handleItemDone(index)}>완료</button>
+              <button className='button' id='삭제' onClick={() => handleDeleteItem(item.id)}>삭제하기</button>
+              <button className='button' id='완료' onClick={() => handleItemDone(item.id)}>완료</button>
             </div>
           </li>
         ))}
