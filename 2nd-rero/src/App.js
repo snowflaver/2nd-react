@@ -90,6 +90,9 @@ function Done({ items, handleDeleteItem, handleItemDone }) {
       <ul className='donelist'>
         {items.map((item) => (
           <li key={item.id}>
+            <button>
+              <Link to={`/details/${item.id}`}>상세보기</Link>
+            </button>
             <h4>{item.title}</h4>
             <p>{item.content}</p>
             <div className='버튼들'>
@@ -110,6 +113,9 @@ function Working({ items, handleDeleteItem, handleItemDone }) {
       <ul className='worklist'>
         {items.map((item) => (
           <li key={item.id}>
+            <button>
+              <Link to={`/details/${item.id}`}>상세보기</Link>
+            </button>
             <h4>{item.title}</h4>
             <p>{item.content}</p>
             <div className='버튼들'>
