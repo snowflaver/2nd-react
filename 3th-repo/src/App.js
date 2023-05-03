@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { Modal } from './Modal';
 import { Input, CommaInput } from './Input';
-// import { Select } from './Select';
 import styled from 'styled-components';
 import './App.css';
 
@@ -107,7 +106,7 @@ function App() {
               </div>
             )}
           </FirstSelectWrapper>
-          <SecondSelectWrapper>
+          {/* <SecondSelectWrapper>
             <FirstSelect onClick={() => setShowOptions2(!showOptions2)}>
               {selectedOption2 || '리액트'}
             </FirstSelect>
@@ -126,7 +125,7 @@ function App() {
                 ))}
               </div>
             )}
-          </SecondSelectWrapper>
+          </SecondSelectWrapper> */}
         </SelectWrapper>
       </SelectStyle>
     </div >
@@ -136,55 +135,67 @@ function App() {
 export default App;
 
 const SelectStyle = styled.div`
-width: 100%;
-height: 200px;
-margin: 10px;
-border: 3px solid lightgray;
-overflow: hidden;
-`
+  width: 100%;
+  height: 200px;
+  margin: 10px;
+  border: 3px solid lightgray;
+`;
 
 const SelectWrapper = styled.div`
-margin: 10px;
-display: flex;
-align-items: center;
-gap: 10px;
-position: relative;
-`
+  margin: 10px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  position: relative;
+`;
 
 const FirstSelectWrapper = styled(SelectWrapper)`
-position: relative;
-flex-direction: column;
-overflow: visible;
+  position: relative;
+  flex-direction: column;
+  z-index: 2;
+
+  .options-modal {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    background-color: white;
+    border: 1px solid black;
+    z-index: -1;
+  }
 `;
 
 const SecondSelectWrapper = styled(SelectWrapper)`
-position: relative;
-overflow: hidden;
-flex-direction: column;
+  position: relative;
+  flex-direction: column;
 `;
 
 const FirstSelect = styled.button`
-width: 400px;
-height: auto;
-background-color: white;
-border: 1px solid black;
-`
+  width: 400px;
+  height: auto;
+  font-size: 15px;
+  background-color: white;
+  border: 1px solid black;
+`;
 
 const SecondSelect = styled.button`
-width: 400px;
-height: auto;
-background-color: white;
-border: 1px solid black;
-z-index: 5;
-`
+  width: 400px;
+  height: auto;
+  font-size: 15px;
+  background-color: white;
+  border: 1px solid black;
+  z-index: 5;
+`;
 
 const OptionItem = styled.div`
-padding: 5px 10px;
-cursor: pointer;
+  padding: 5px 10px;
+  cursor: pointer;
+  position: relative;
+  z-index: 1;
 
-&:hover {
-  background-color: #f1f1f1;
-}
+  &:hover {
+    background-color: #f1f1f1;
+  }
 `;
 
 const ButtonWrapper = styled.div`
